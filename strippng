@@ -1,0 +1,7 @@
+#!/bin/bash
+# converts pngs for surpress srgb warning
+###########################
+# need the path to base dir
+###########################
+
+find $1 -type f -name "*.png" -exec convert {} -strip {} \;

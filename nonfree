@@ -1,0 +1,21 @@
+#!/bin/sh 
+# A script to list non-free software installed on a Gentoo system 
+qdepends --nocolor --key LICENSE .* | awk 'BEGIN { 
+# This should list free licenses; it is almost certainly incomplete. 
+license_count = split("GPL GPL-2 GPL-2-with-exceptions GPL-3 LGPL-2 LGPL-2.1 BSD MIT X11 public-domain Apache-1.1 Apache-2.0 Artistic-2", 
+free_licenses, " ") 
+nonfree_count = 0 
+} 
+
+{ 
+for (i in free_licenses) { 
+    for (j=2; j <= NF; j++) { 
+   if (free_licenses[i] == $j) 
+       next 
+    } 
+} 
+print $0 
+nonfree_count++ 
+} 
+
+END { printf "%d nonfree packages were found\n", nonfree_count }' 
