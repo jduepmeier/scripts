@@ -30,8 +30,8 @@ if [ "$MEMTIME" -ge "$CURRENT" ]
 then
 	if [ "$MEMCOUNTER" -gt "$MAXCOUNTER" ]
 	then
-		$CMD
 		MEMCOUNTER=0
+		$CMD
 	else
 		MEMCOUNTER=$(($MEMCOUNTER + 1))
 	fi
