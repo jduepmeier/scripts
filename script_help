@@ -1,0 +1,21 @@
+#!/bin/bash
+# prints the first comments block of a file
+# $1 is program (searchpath is $HOME/scripts/
+
+
+if [ -z "$1" ];then
+	ls -C -1 "$HOME/scripts/"
+	exit 0
+fi
+
+while read line
+do
+	case $line in
+		"#"*)
+			echo $line
+			;;
+		*)
+			exit 0
+			;;
+	esac
+done < "$HOME/scripts/$1"

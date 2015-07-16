@@ -1,0 +1,29 @@
+#!/bin/bash
+# ctl multi systems
+#####################
+#
+# avail modes: mpd gmusicbrowser, 
+
+PROFILES="$HOME/.mediactl"
+CONFIG="mediactl.conf"
+
+if [ -f $PROFILES/$CONFIG ]; then
+	source $PROFILES/$CONFIG
+fi
+
+
+case $1 in
+	"switch")
+		echo "switch to $2 config ($2.conf)"
+		echo "CURRENT=\"$2\"" > "$PROFILES/$CONFIG"
+		;;
+	*)
+		echo "Current profile: $CURRENT"
+		if [ -f $PROFILES/$CURRENT.conf ]; then
+			source $PROFILES/$CURRENT.conf
+			mediactl_$1
+		else
+			echo "No valid config set!"
+		fi
+		;;
+esac

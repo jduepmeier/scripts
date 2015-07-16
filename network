@@ -1,0 +1,5 @@
+#/bin/bash
+NETWORK="$1"
+shift
+cp "/home/mpease/.wpa/$NETWORK.conf" /tmp/wpa_supplicant.conf
+wpa_cli reconfigure
