@@ -1,5 +1,28 @@
 #/bin/bash
+set -e
+
 NETWORK="$1"
+CONF_DIR="$HOME/.wpa"
+
+if [ -z "$NETWORK" ]
+then
+	echo "Network is missing."
+	exit 1
+fi
+
+if [[ "$NETWORK" != *.conf ]]
+then
+	NETWORK+=".conf"
+fi
+
+if ! [ -f "$CONF_DIR/$NETWORK" ]
+then
+	echo "Config file not found."
+	exit 2
+fi
+
 shift
-cp "/home/mpease/.wpa/$NETWORK.conf" /tmp/wpa_supplicant.conf
+rc-status | grep "wpa_supplicant.*started" 1>/dev/null || sudo rc-service wpa_supplicant start
+
+cp "$HOME/.wpa/$NETWORK" /tmp/wpa_supplicant.conf
 wpa_cli reconfigure
