@@ -1,0 +1,39 @@
+#!/bin/bash
+# Selects the next element with help of a current file
+CACHE_FILE=${CACHE_FILE:=".current"}
+
+if [ $# -lt 1 ];
+then
+	echo "Need an command."
+	exit 1
+fi
+
+CURRENT=$(ls | head -1)
+
+if [ -f "$CACHE_FILE" ];
+then
+	CURRENT=$(cat "$CACHE_FILE")
+fi
+
+if [ "$CURRENT" == "" ];
+then
+	echo "No file in directory."
+	exit 1
+fi
+
+$@ "$CURRENT"
+
+for f in *
+do
+	if [ "$CURRENT" == "" ];
+	then
+		echo "$f" > $CACHE_FILE
+		exit 0
+	elif [ "$CURRENT" == "$f" ];
+	then
+		CURRENT=""
+	fi
+done
+
+echo "You're done..."
+rm -f "$CACHE_FILE"

@@ -1,0 +1,8 @@
+#!/bin/bash
+# resize images
+
+for file in *.jpg *.JPG
+do
+	convert $file -resize 1600x1200 $file
+done
+	

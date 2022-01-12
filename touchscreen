@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# disables/enables the touchscreen
+
+if [[ "$1" = '--help' ]]
+then
+	(>&2 echo "valid commands: enable,disable,status" )
+	exit 1
+fi
+
+TOUCHSCREEN_DEVICE="type:touch"
+
+case $1 in
+	enable)
+		swaymsg input "$TOUCHSCREEN_DEVICE" events enabled
+		;;
+	disable)
+		swaymsg input "$TOUCHSCREEN_DEVICE" events disabled
+		;;
+	*)
+		swaymsg -t get_inputs -r | jq -r '.[] | select(.type == "touch") | .libinput.send_events'
+		;;
+esac

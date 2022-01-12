@@ -1,0 +1,122 @@
+#!/bin/bash
+#
+# control jack server
+
+JACKDRC="${HOME}/.jackdrc"
+ASOUNDRC="${HOME}/.asoundrc"
+PROFILES="${HOME}/.config/jackctl/profiles"
+JACKCTL_PROFILE_FILE="${HOME}/.jackctl-profile"
+
+if [ -f "${JACKCTL_PROFILE_FILE}" ]
+then
+	source "${JACKCTL_PROFILE_FILE}"
+fi
+
+start() {
+	RUNNING=$(status 2>/dev/null)
+	if [[ "$RUNNING" = "0" ]]
+	then
+		(1>&2 echo "jack is already running")
+		return
+	fi
+
+	if [ -f "${JACKDRC}" ]
+	then
+		JACK_CMD=$(cat "${JACKDRC}" )
+
+		( $JACK_CMD 2>&1  >> .log/jackd.log ) &
+	else
+		(1>&2 echo "missing $JACKDRC" )
+	fi
+}
+
+stop() {
+	RUNNING=$(status 2>/dev/null)
+	if [[ "$RUNNING" = "0" ]]
+	then
+		(1>&2 echo "stop jackd")
+		pkill jackd
+		sleep 5
+	fi
+}
+
+restart() {
+	stop
+	start
+}
+
+status() {
+	PID=$(pgrep jackd)
+	if [[ $? -eq 0 ]]
+	then
+		(1>&2 echo "jack is running with pid ${PID}")
+		(1>&2 echo "profile is ${JACKCTL_PROFILE}")
+		echo 0
+	else
+		(1>&2 echo "jack is not running")
+		echo 1
+	fi
+}
+
+switch() {
+	if [ -z "$1" ]
+	then
+		(1>&2 echo "switch needs a profile name" )
+	fi
+	PROFILE="${PROFILES}/$1"
+	if [ -d "${PROFILE}" ]
+	then
+		cp "${PROFILE}/.jackdrc" "${JACKDRC}"
+		cp "${PROFILE}/.asoundrc" "${ASOUNDRC}"
+		cp "${PROFILE}/.jackctl-profile" "${JACKCTL_PROFILE_FILE}"
+		restart
+	else
+		(1>&2 echo "${PROFILE} does not exist" )
+		return 1
+	fi
+	return 0
+}
+
+save() {
+	PROFILE="${PROFILES}/$1"
+	if [ -z "$1" ]
+	then
+		(1>&2 echo "switch needs a profile name" )
+	fi
+	mkdir -p "${PROFILE}"
+	cp  "${JACKDRC}" "${PROFILE}/.jackdrc"
+	cp  "${ASOUNDRC}" "${PROFILE}/.asoundrc"
+	echo "JACKCTL_PROFILE=${1}" > "${PROFILE}/.jackctl-profile"
+}
+
+list() {
+	ls ${PROFILES}
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	status)
+		status >/dev/null
+		;;
+	switch)
+		switch "$2"
+		;;
+	save)
+		save "$2"
+		;;
+	list)
+		list
+		;;
+	*)
+		(1>&2 echo "$0 start|stop|restart|status|list|switch <profile>|save <profile>" )
+		status
+		;;
+esac

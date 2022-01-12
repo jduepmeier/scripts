@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+	echo 'Need an pid as argument'
+	exit 1
+fi
+
+ps "$1"
+( 1>&2 echo 'pid correct? (yes/no)' )
+read pidcheck
+
+if [ "$pidcheck" != "yes" ]
+then
+	exit 1
+fi
+
+while true
+do
+	ps "$1" || /sbin/shutdown -h now
+	sleep 10
+done

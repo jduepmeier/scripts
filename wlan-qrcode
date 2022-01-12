@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Creates wlan0 qrcodes
+
+usage() {
+	(1>&2
+	cat <<EOF
+IMAGE_FILE=<image_file> SSID=<SSID> $0
+
+IMAGE_FILE defines the output location of the generated qrcode
+SSID defines the ssid to encode.
+The password will be read from stdin.
+EOF
+	)
+}
+
+if [ -z "${IMAGE_FILE}" ]
+then
+	(1>&2 echo "IMAGE_FILE is missing" )
+	usage
+	exit 1
+fi
+
+if [ -z "${SSID}" ]
+then
+	(1>&2 echo "SSID is missing" )
+	usage
+	exit 1
+fi
+
+(1>&2 echo -n "PASSWORD for ${SSID}: " )
+stty -echo
+read -r PASSWORD
+
+stty echo
+
+
+qrencode -o "${IMAGE_FILE}" "WIFI:S:${SSID};T:WPA2;P:${PASSWORD};;"

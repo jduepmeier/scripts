@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+anbox session-manager &
+anbox launch --package=org.anbox.appmgr --component=org.anbox.appmgr.AppViewActivity

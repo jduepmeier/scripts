@@ -1,0 +1,1 @@
+echo "\n!0 remove time\n!0 enable source uuid\n!0 remove source\n" | nc -q 5 127.0.0.1 2501

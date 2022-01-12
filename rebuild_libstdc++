@@ -1,0 +1,6 @@
+#!/bin/bash
+while read i in $(cat done); do
+  [ -n "$(ldd -r $i | grep 'libstdc++')" ] && qfile "$i" >> rebuild.packages
+done
+cut -d ' ' -f1 rebuild.packages | sort -u -o rebuild.packages
+emerge -1av $(cat rebuild.packages)

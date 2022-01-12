@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# do a full backup of android files
+
+DATE=$(date +'%Y-%m-%d')
+
+do_backup() {
+	adb backup -f "${1}_${DATE}.twrp" --twrp "$1"
+}
+
+do_backup etc
+do_backup system
+do_backup data
+do_backup cache

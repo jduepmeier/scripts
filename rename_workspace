@@ -1,0 +1,6 @@
+#!/bin/bash
+# rename workspace
+
+NAME=$(i3-msg -t get_workspaces | ./get_active_workspace.py)
+
+i3-msg "rename workspace $NAME to $NAME:$1"

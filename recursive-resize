@@ -1,0 +1,18 @@
+#!/bin/bash
+
+dir_change() {
+
+	for i in *
+	do
+		if [ -d $i ]
+		then
+			echo "resize dir $i"
+			cd $i
+			dir_change
+			resize_imgs
+			cd ..
+		fi
+	done
+}
+
+dir_change

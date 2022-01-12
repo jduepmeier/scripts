@@ -1,0 +1,2 @@
+#!/bin/bash
+WAYLAND_DEBUG=client sway -d 2> ~/sway.log

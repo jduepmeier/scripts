@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# runs a command on all matching files in folder
+
+set -e
+
+if [ -z "$1" ]
+then
+	echo "No command given"
+fi
+
+if [ -z "$2" ]
+then
+	echo "No match given."
+fi
+
+CMD="$1"
+shift
+
+for f in "$@"
+do
+	"$CMD" "$f"
+done

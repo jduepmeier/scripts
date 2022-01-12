@@ -3,4 +3,4 @@
 # mit $(xdotool getactivewindow) bekommt man das gerade aktive fenster
 { read __ WIDTH; read __ HEIGHT; read __ __ BORDER_WIDTH; } < <(xwininfo -id $(xdotool getactivewindow) | grep -o -e 'Height:.*' -e 'Width:.*' -e 'Border width:.*')
 
-feh -Z -N -Y -z -B black -D 5 -geometry=${WIDTH}x${HEIGHT} -p -R 60 -. $@
+feh -Z -N -Y -z -B black -geometry=${WIDTH}x${HEIGHT} -p -R 60 -. $@

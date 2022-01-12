@@ -1,0 +1,5 @@
+#!/bin/bash
+# list all avaiable wpa configs
+
+CONFIG_PATH=~/.wpa
+ls $CONFIG_PATH/$1

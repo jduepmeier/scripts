@@ -1,0 +1,4 @@
+#!/bin/bash
+#
+# starts sway with dbus session
+exec dbus-run-session sway

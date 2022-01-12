@@ -1,0 +1,5 @@
+#!/bin/bash
+# ssh keyboard
+# $1 is the server
+# x2x must be installed
+ssh -Y $1 x2x -to :0 -nomouse

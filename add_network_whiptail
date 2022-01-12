@@ -1,0 +1,18 @@
+#!/bin/bash
+eval `resize`
+
+WLANS=$(sudo iw wlan0 scan | grep SSID | cut -d' ' -f2)
+declare -a TEST
+COUNTER=0
+for w in $WLANS;
+do
+	TEST[$COUNTER]="$COUNTER $w OFF"
+	COUNTER="$(( $COUNTER + 1 ))"
+done
+# echo "${TEST[*]}"
+echo "LINES: $LINES"
+echo "COLUMNS: $COLUMNS"
+echo "LAST: $(( $LINES - 8 ))"
+
+
+whiptail --radiolist "Which network you want?" $LINES $COLUMNS $(( $LINES - 8 )) ${TEST[*]}

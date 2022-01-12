@@ -1,0 +1,3 @@
+#!/bin/bash
+# show all branches in a git repo
+git log --graph --all --simplify-by-decoration --decorate --oneline

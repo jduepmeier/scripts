@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+log() {
+	( >&2 echo "$@" )
+}
+
+main() {
+	mode="${1:-}"
+
+	case "$mode" in
+		on)
+			swaymsg 'output * dpms on'
+			swaymsg 'mode "default"'
+			;;
+		off)
+			swaymsg 'output * dpms off'
+			swaymsg 'mode "dpms_off"'
+			;;
+		*)
+			log "unknown mode ${mode}"
+			;;
+	esac
+}
+main "$@"

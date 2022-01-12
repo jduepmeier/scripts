@@ -1,0 +1,6 @@
+#!/bin/bash
+# find code dir
+# needs $1 as project folder
+
+DIR=$(find ~/code/ -type d -name $1)
+cd $DIR

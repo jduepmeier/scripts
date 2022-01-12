@@ -1,0 +1,6 @@
+#!/bin/bash
+# einfacher wecker
+# $1 ist anzahl der sekunden die er "schlafen soll"
+
+sleep $1
+i3-nagbar -t warning -m "Wecker :)"

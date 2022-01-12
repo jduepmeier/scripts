@@ -1,0 +1,27 @@
+#!/bin/bash
+
+GIT_CMD="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+
+if [ -z "$1" ]
+then
+	DIRECTORY="$1"
+else
+	DIRECTORY="."
+fi
+
+SUBMODULES=$($GIT_CMD submodule status | cut -d ' ' -f 3)
+
+add_directory() {
+	pushd $1 > /dev/null
+	cd ..
+	URL=$(git remote get-url origin)
+	NAME=$(basename $(pwd))
+	echo "$SUBMODULES" | cut -d ' ' -f 3 | grep "${NAME}\$" -q || \
+		$GIT_CMD submodule add "$URL" .
+	popd > /dev/null
+}
+
+find $DIRECTORY -name .git -print0 | while IFS= read -r -d $'\0' line
+do
+	add_directory "$line"
+done

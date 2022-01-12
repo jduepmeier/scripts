@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# manage audio profiles
+
+ASOUNDRC=".asoundrc"
+ASOUNDRC_FILE="${HOME}/${ASOUNDRC}"
+PROFILES="${HOME}/.config/audioswitch/profiles"
+PROFILE_FILE="${HOME}/.audio-profile"
+
+if [ -f "${PROFILE_FILE}" ]
+then
+	source "${PROFILE_FILE}"
+else
+	CURRENT_PROFILE="default"
+fi
+
+output() {
+	(1>&2 echo $@ )
+}
+
+status() {
+	output "current profile is ${CURRENT_PROFILE}"
+}
+
+switch() {
+	if [ -z "$1" ]
+	then
+		output "switch needs a profile name"
+		return 1
+	fi
+	PROFILE="${PROFILES}/$1"
+	if [ -d "${PROFILE}" ]
+	then
+		cp "${PROFILE}/${ASOUNDRC}" "${ASOUNDRC_FILE}"
+		cp "${PROFILE}/profile" "${PROFILE_FILE}"
+	else
+		output "${PROFILE} does not exist"
+		return 1
+	fi
+	return 0
+}
+
+save() {
+	PROFILE="${PROFILES}/$1"
+	if [ -z "$1" ]
+	then
+		output "switch needs a profile name"
+		return
+	fi
+	mkdir -p "${PROFILE}"
+	cp  "${ASOUNDRC_FILE}" "${PROFILE}/${ASOUNDRC}"
+	echo "CURRENT_PROFILE=${1}" > "${PROFILE}/profile"
+}
+
+list() {
+	ls ${PROFILES}
+}
+
+case "$1" in
+	status)
+		status >/dev/null
+		;;
+	switch)
+		switch "$2"
+		;;
+	save)
+		save "$2"
+		;;
+	list)
+		list
+		;;
+	*)
+		output "$0 status|list|switch <profile>|save <profile>"
+		status
+		;;
+esac
