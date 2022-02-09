@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-revert() {
-	"${HOME}/scripts/dpms" on
-}
-trap revert SIGHUP SIGINT SIGTERM
-"${HOME}/scripts/dpms" off
-swaylock -c 222222 -e
-revert
+
+pgrep swaylock || swaylock -c 222222 -e -f
+"$HOME/scripts/dpms" off
+
